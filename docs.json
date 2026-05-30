@@ -65,7 +65,8 @@
                 "group": "开发工具&平台",
                 "pages": [
                   "cn/usercases/openclaw",
-                  "cn/usercases/cursor"
+                  "cn/usercases/cursor",
+                  "cn/usercases/claudecode"
                 ]
               }
             ]
