@@ -82,6 +82,10 @@
       {
         "label": "Support",
         "href": "mailto:hi@maxapi.ai"
+      },
+      {
+        "href": "https://api.maxapi.ai",
+        "label": " Get started"
       }
     ],
     "primary": {
