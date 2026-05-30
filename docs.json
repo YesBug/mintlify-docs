@@ -7,7 +7,10 @@
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/favicon.svg",
+    "dark": "/images/max.svg"
+  },
   "navigation": {
     "pages": [
       {
@@ -115,5 +118,9 @@
   },
   "icons": {
     "library": "fontawesome"
+  },
+  "logo": {
+    "light": "/images/max.svg",
+    "dark": "/images/max.svg"
   }
 }
