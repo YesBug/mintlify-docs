@@ -1,0 +1,39 @@
+---
+title: "Cursor"
+---
+
+# Cursor
+
+> 将 ePhone AI 接入 Cursor，使用 GPT、Claude、DeepSeek 等模型进行 AI 辅助编程。
+
+[Cursor](https://cursor.sh) 是一款基于 VS Code 构建的 AI 编程 IDE，内置 AI 对话、代码补全和代码生成等功能。
+
+## 配置步骤
+
+<Steps>
+  <Step title="打开 Cursor 设置">
+    在 Cursor 中按 `Cmd/Ctrl + Shift + J` 打开设置，或进入菜单 **File → Preferences → Cursor Settings**。
+  </Step>
+  <Step title="进入 Models 配置">
+    在设置面板左侧找到 **Models** 选项卡，向下滚动找到 **OpenAI API Key** 区域。
+  </Step>
+  <Step title="填写 API 信息">
+    - **OpenAI API Key**：填入您的 ePhone AI API Key（以 `sk-` 开头）
+    - **Override OpenAI Base URL**：填入 `https://api.maxapi.ai/v1`
+
+    填写完成后点击 **Verify** 验证连接。
+  </Step>
+  <Step title="添加或选择模型">
+    在 Models 列表中，您可以直接填写任意平台支持的模型名称，例如 `gpt-4o`、`deepseek-r1`、`claude-opus-4-5-20251101` 等。
+  </Step>
+</Steps>
+
+## 注意事项
+
+<Warning>
+  Cursor 的第三方 API 模式目前仅支持 **Chat 功能**，不支持 Cursor Tab（自动补全）和 Agent 模式。如需完整功能，请使用 Cursor 官方订阅。
+</Warning>
+
+- 如需使用 Claude 系列模型，直接填写模型全名即可，例如 `claude-opus-4-5-20251101`
+- 推荐提供商选择 `Official` 或 `Enterprise` 以获得更稳定的体验
+- 如遇到模型不可用，请在 ePhone AI 控制台确认该模型已在您的令牌可用列表中

@@ -55,7 +55,22 @@
         ]
       },
       {
-        "tab": "API Reference"
+        "tab": "使用场景",
+        "languages": [
+          {
+            "language": "cn",
+            "default": true,
+            "groups": [
+              {
+                "group": "开发工具&平台",
+                "pages": [
+                  "cn/usercases/openclaw",
+                  "cn/usercases/cursor"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
