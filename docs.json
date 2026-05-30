@@ -18,30 +18,38 @@
         ]
       }
     ],
-    "languages": [
+    "tabs": [
       {
-        "language": "cn",
-        "pages": [
+        "tab": "Guides",
+        "languages": [
           {
-            "group": "快速开始",
+            "language": "cn",
             "pages": [
-              "star",
-              "quickstart"
-            ],
-            "expanded": true
+              {
+                "group": "快速开始",
+                "expanded": true,
+                "pages": [
+                  "star",
+                  "quickstart"
+                ]
+              }
+            ]
+          },
+          {
+            "language": "en",
+            "groups": [
+              {
+                "group": "1",
+                "pages": [
+                  "1"
+                ]
+              }
+            ]
           }
         ]
       },
       {
-        "language": "en",
-        "groups": [
-          {
-            "group": "1",
-            "pages": [
-              "1"
-            ]
-          }
-        ]
+        "tab": "API Reference"
       }
     ]
   },
