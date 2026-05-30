@@ -3,19 +3,17 @@ title: "开始使用"
 description: "Welcome to your project"
 ---
 
-# 快速开始
-
-> 5 分钟完成接入，立即体验 ePhone AI 平台上的所有模型。
+> 5 分钟完成接入，立即体验 MaxAPI AI 平台上的所有模型。
 
 ## 第一步：注册账号
 
-前往 [ePhone AI 控制台](https://platform.ephone.ai) 注册账号。
+前往 [MaxAPI AI 控制台](https://api.maxapi.ai) 注册账号。
 
 注册完成后，您将需要以下两个配置项：
 
 | 变量         | 值                       |
 | ---------- | ----------------------- |
-| `BASE_URL` | `https://api.ephone.ai` |
+| `BASE_URL` | `https://api.maxapi.ai` |
 | `API_KEY`  | 您在控制台创建的 API 令牌         |
 
 ## 第二步：创建 API Key
@@ -24,14 +22,14 @@ description: "Welcome to your project"
 
 ## 第三步：发起第一个请求
 
-将 `API_KEY` 替换为您刚才创建的令牌，`BASE_URL` 已固定为 `https://api.ephone.ai`。
+将 `API_KEY` 替换为您刚才创建的令牌，`BASE_URL` 已固定为 `https://api.maxapi.ai`。
 
 <CodeGroup>
   ```python Python theme={null}
   from openai import OpenAI
 
   client = OpenAI(
-      base_url="https://api.ephone.ai/v1",
+      base_url="https://api.maxapi.ai/v1",
       api_key="API_KEY",
   )
 
@@ -47,7 +45,7 @@ description: "Welcome to your project"
   import OpenAI from "openai";
 
   const client = new OpenAI({
-    baseURL: "https://api.ephone.ai/v1",
+    baseURL: "https://api.maxapi.ai/v1",
     apiKey: "API_KEY",
   });
 
@@ -60,7 +58,7 @@ description: "Welcome to your project"
   ```
 
   ```bash cURL theme={null}
-  curl https://api.ephone.ai/v1/chat/completions \
+  curl https://api.maxapi.ai/v1/chat/completions \
     -H "Authorization: Bearer API_KEY" \
     -H "Content-Type: application/json" \
     -d '{
@@ -79,7 +77,7 @@ description: "Welcome to your project"
   import anthropic
 
   client = anthropic.Anthropic(
-      base_url="https://api.ephone.ai/anthropic",
+      base_url="https://api.maxapi.ai/anthropic",
       api_key="API_KEY",
   )
 
@@ -93,7 +91,7 @@ description: "Welcome to your project"
   ```
 
   ```bash cURL theme={null}
-  curl https://api.ephone.ai/anthropic/v1/messages \
+  curl https://api.maxapi.ai/anthropic/v1/messages \
     -H "x-api-key: API_KEY" \
     -H "anthropic-version: 2023-06-01" \
     -H "Content-Type: application/json" \
