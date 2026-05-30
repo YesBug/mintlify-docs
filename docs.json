@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "MaxAPI.AI Docs",
+  "name": "MaxAPI Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -81,7 +81,7 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hi@maxapi.ai"
       }
     ],
     "primary": {
@@ -104,9 +104,8 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "website": "https://api.maxapi.ai"
     }
-  }
+  },
+  "description": "MaxAPI.AI Docs"
 }
