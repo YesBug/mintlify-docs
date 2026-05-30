@@ -26,17 +26,17 @@
             "language": "cn",
             "pages": [
               {
-                "group": "快速开始",
+                "group": "开始使用",
                 "expanded": true,
                 "pages": [
-                  "quickstart",
-                  "introduction"
+                  "cn/guides/quickstart",
+                  "cn/guides/introduction"
                 ]
               },
               {
                 "group": "模型与服务",
                 "pages": [
-                  "pricing"
+                  "cn/guides/pricing"
                 ]
               }
             ]
@@ -50,7 +50,8 @@
                   "1"
                 ]
               }
-            ]
+            ],
+            "hidden": true
           }
         ]
       },
