@@ -1,0 +1,438 @@
+---
+title: "cn/usercases/codex"
+---
+
+> ## Documentation Index
+>
+> Fetch the complete documentation index at: [https://docs.rixapi.com/docs/llms.txt](https://docs.rixapi.com/docs/llms.txt) Use this file to discover all available pages before exploring further.
+
+# OpenAI Codex CLI
+
+> OpenAI 官方命令行 AI 编程工具，支持自主执行代码任务，通过自定义 Provider 接入 ePhone AI。
+
+[Codex CLI](https://github.com/openai/codex) 是 OpenAI 官方推出的命令行 AI 编程代理，支持在终端中通过自然语言完成代码生成、重构、调试、文件编辑和系统命令执行等任务。与其他 AI 编程工具相比，Codex CLI 具备完整的沙箱隔离能力和细粒度的权限控制。
+
+## 安装
+
+<Steps>
+  <Step title="检查 Node.js 版本">
+    ```bash
+    node -v
+    ```
+
+    需要 Node.js **22\+**。
+  </Step>
+  <Step title="安装 Codex CLI">
+    ```bash
+    npm install -g @openai/codex
+    ```
+  </Step>
+</Steps>
+
+## 配置 ePhone AI
+
+Codex CLI 通过 `model_providers` 定义自定义 API 提供商，并通过顶层 `model_provider` 指定默认使用哪个 Provider。
+
+<Steps>
+  <Step title="设置 API Key 环境变量">
+    <Accordion title="Mac / Linux (zsh)">
+      ```zsh
+      echo 'export OPENAI_API_KEY="sk-your-api-key"' >> ~/.zshrc
+      source ~/.zshrc
+      ```
+    </Accordion>
+
+    <Accordion title="Mac / Linux (bash)">
+      ```bash
+      echo 'export OPENAI_API_KEY="sk-your-api-key"' >> ~/.bash_profile
+      source ~/.bash_profile
+      ```
+    </Accordion>
+
+    <Accordion title="Windows (PowerShell)">
+      ```powershell
+      [Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-your-api-key", "User")
+      ```
+    </Accordion>
+  </Step>
+  <Step title="创建配置文件">
+    ```bash
+    mkdir -p ~/.codex
+    ```
+
+    在 `~/.codex/config.toml` 中写入以下内容：
+
+    ```toml
+    # ~/.codex/config.toml
+    
+    model = "gpt-4o"
+    model_provider = "ephone"       # 关键：指定默认 Provider
+    disable_response_storage = true
+    
+    [model_providers.ephone]
+    name = "ePhone AI"
+    base_url = "https://api.maxapi.ai/v1"
+    env_key = "OPENAI_API_KEY"      # 环境变量名称（不是 Key 本身）
+    wire_api = "responses"          # Responses API 协议（唯一支持的值）
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  **三个关键配置，缺一不可：**
+
+  - `model_provider = "ephone"` — 如果不设置，Codex 会把 `gpt-4o` 等已知模型名直接路由到 OpenAI 官方
+  - `wire_api = "responses"` — Codex 唯一支持的协议，使用 Responses API
+  - `env_key = "OPENAI_API_KEY"` — 这里填的是**环境变量名称**，不是 Key 值本身
+</Warning>
+
+## 启动与审批模式
+
+```bash
+codex
+```
+
+首次启动时需要选择审批模式，控制 Codex 执行操作时的权限策略：
+
+| 模式 | 配置值 | 说明 |
+| --- | --- | --- |
+| **建议模式** | `untrusted` | 默认模式。Codex 只能读取文件，所有写入和命令执行都需要你确认 |
+| **自动执行** | `on-request` | 自动执行沙箱内的安全操作，需要权限提升时才确认 |
+| **全自动** | `never` | 无需任何确认，Codex 自主完成所有操作。适合信任的开发环境 |
+
+在 `config.toml` 中设置默认审批模式：
+
+```toml
+approval_policy = "on-request"
+```
+
+## 常用命令
+
+### CLI 启动参数
+
+| 命令 | 说明 |
+| --- | --- |
+| `codex` | 启动交互式会话 |
+| `codex "任务描述"` | 直接执行一次性任务 |
+| `codex --model gpt-4o "任务"` | 指定模型执行任务 |
+| `codex --image screenshot.png "修复这个 bug"` | 附加图片作为上下文 |
+| `codex --search "任务描述"` | 启用网络搜索后执行任务 |
+| `codex --profile fast "快速任务"` | 使用预设的配置档案 |
+
+### 会话内命令
+
+在交互式会话中，可以使用以下斜杠命令：
+
+| 命令 | 说明 |
+| --- | --- |
+| `/status` | 查看当前模型、Token 消耗和配置信息 |
+| `/model` | 切换使用的模型 |
+| `/approvals` | 调整当前会话的审批策略 |
+| `/compact` | 压缩对话历史，释放上下文窗口 |
+| `/clear` | 清除当前对话历史 |
+| `/init` | 在当前目录创建 `AGENTS.md` 配置模板 |
+| `/feedback` | 提交反馈 |
+
+## 推荐模型
+
+| 场景 | 推荐模型 | 说明 |
+| --- | --- | --- |
+| 日常编程辅助 | `gpt-4o` | 速度与能力均衡，适合大多数任务 |
+| 复杂代码重构 | `o4-mini` | 推理能力强，适合需要深度思考的任务 |
+| 快速轻量任务 | `gpt-4o-mini` | 响应速度快，成本低 |
+
+<Tip>
+  使用 `/model` 命令可以在会话中随时切换模型，无需重启。
+</Tip>
+
+## 项目配置：AGENTS.md
+
+Codex 会在启动时自动读取 `AGENTS.md` 文件作为项目上下文指令，类似于 Claude Code 的 `CLAUDE.md`。通过分层配置，你可以为不同项目、不同目录设置不同的规则。
+
+### 配置发现顺序
+
+1. **全局配置**：`~/.codex/AGENTS.md` — 所有项目共享的默认规则
+2. **项目根目录**：`<project-root>/AGENTS.md` — 项目级规则
+3. **子目录**：`<subdir>/AGENTS.md` — 子目录级覆盖规则
+
+每个层级也支持 `AGENTS.override.md`，优先级高于同目录的 `AGENTS.md`。
+
+### 全局配置示例
+
+```markdown
+# ~/.codex/AGENTS.md
+
+## 通用规范
+- 使用中文进行对话和注释
+- 优先使用 pnpm 安装依赖
+- 修改代码后运行相关测试
+- 提交信息遵循 Conventional Commits 规范
+```
+
+### 项目配置示例
+
+```markdown
+# AGENTS.md
+
+## 项目信息
+这是一个使用 Go + React 的全栈项目。
+
+## 开发规范
+- 后端使用 Go 1.22+，遵循标准项目结构
+- 前端使用 TypeScript，禁止 any 类型
+- 所有用户可见文字必须使用 i18n
+- 修改后端代码后运行 make build 验证编译
+- 修改前端后运行 npm run lint 检查
+
+## 测试要求
+- 新增 API 必须附带单元测试
+- 测试命令：go test ./... -v
+```
+
+### 子目录覆盖示例
+
+```markdown
+# services/payments/AGENTS.override.md
+
+## 支付服务特殊规则
+- 使用 make test-payments 代替默认测试命令
+- 涉及金额计算必须使用 decimal 类型
+- 禁止直接操作生产数据库
+```
+
+## 配置档案 (Profiles)
+
+Profiles 可以让你快速切换不同的配置集，适合在不同项目或场景间切换：
+
+```toml
+# ~/.codex/config.toml
+
+# 默认使用 fast 档案
+profile = "fast"
+
+[profiles.fast]
+model_provider = "ephone"
+model = "gpt-4o-mini"
+approval_policy = "never"
+
+[profiles.careful]
+model_provider = "ephone"
+model = "o4-mini"
+approval_policy = "on-request"
+model_reasoning_effort = "high"
+```
+
+使用时通过 `--profile` 切换：
+
+```bash
+codex --profile careful "重构这个模块的错误处理逻辑"
+```
+
+<Info>
+  每个 Profile 都需要设置 `model_provider = "ephone"`，否则切换 Profile 后可能回退到 OpenAI 官方。
+</Info>
+
+## MCP 服务器集成
+
+Codex CLI 支持通过 [MCP（Model Context Protocol）](https://modelcontextprotocol.io/) 连接外部工具，显著增强 Agent 能力。
+
+```toml
+# ~/.codex/config.toml
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@context7/mcp"]
+
+[mcp_servers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+env = { GITHUB_PERSONAL_ACCESS_TOKEN = "ghp_xxx" }
+```
+
+配置后 Codex 可以直接查询文档、操作 GitHub 等，无需手动提供上下文。
+
+## 推理控制
+
+对于支持推理的模型（如 `o4-mini`），可以控制推理深度：
+
+```toml
+model_reasoning_effort = "high"    # minimal | low | medium | high
+model_reasoning_summary = "auto"   # auto | concise | detailed | none
+```
+
+推理等级越高，模型思考越深入，但 token 消耗也越大。日常任务建议使用 `medium`，复杂重构使用 `high`。
+
+## 网络搜索
+
+Codex 支持在对话中进行网络搜索，获取最新的文档和信息：
+
+```toml
+web_search = "cached"   # disabled | cached | live
+```
+
+- `cached`：使用 OpenAI 维护的索引（默认，速度快）
+- `live`：实时获取网页内容（信息最新）
+- `disabled`：关闭搜索功能
+
+也可以在启动时通过 `--search` 参数启用：
+
+```bash
+codex --search "查找 React 19 的最新 API 变更"
+```
+
+## 沙箱与安全
+
+Codex 提供三级沙箱策略保护你的系统：
+
+| 模式 | 说明 |
+| --- | --- |
+| `read-only` | 只读模式，无法修改文件或执行写入命令 |
+| `workspace-write` | 可以修改工作目录内的文件（默认） |
+| `danger-full-access` | 完全访问，无任何限制（需谨慎使用） |
+
+```toml
+sandbox_mode = "workspace-write"
+```
+
+## 使用场景示例
+
+### 代码重构
+
+```bash
+codex "将 utils/helpers.go 中的所有错误处理改为 wrapped errors 模式"
+```
+
+### Bug 修复（附带截图）
+
+```bash
+codex --image bug-screenshot.png "页面上这个按钮点击后没有反应，帮我定位并修复"
+```
+
+### 项目初始化
+
+```bash
+codex "创建一个 Go + Gin 的 REST API 项目脚手架，包含 CRUD、中间件、Docker 配置"
+```
+
+### Git 操作
+
+```bash
+codex "查看最近的提交历史，找出引入这个 bug 的 commit，然后修复"
+```
+
+### 代码审查
+
+```bash
+codex "审查 src/services/ 目录下最近修改的文件，找出潜在的安全问题和性能隐患"
+```
+
+## 完整配置参考
+
+```toml
+# ~/.codex/config.toml
+
+# 默认模型与 Provider（必须设置）
+model = "gpt-4o"
+model_provider = "ephone"
+
+# 审批策略
+approval_policy = "on-request"
+
+# 沙箱模式
+sandbox_mode = "workspace-write"
+
+# 推理控制
+model_reasoning_effort = "medium"
+
+# 网络搜索
+web_search = "cached"
+
+# 关闭 API 响应存储（第三方 Provider 必须设置）
+disable_response_storage = true
+
+# 对话历史记录
+[history]
+persistence = "save-all"
+
+# ePhone AI Provider
+[model_providers.ephone]
+name = "ePhone AI"
+base_url = "https://api.maxapi.ai/v1"
+env_key = "OPENAI_API_KEY"
+wire_api = "responses"
+
+# 快速模式配置档案
+[profiles.fast]
+model_provider = "ephone"
+model = "gpt-4o-mini"
+approval_policy = "never"
+model_reasoning_effort = "minimal"
+
+# 深度思考配置档案
+[profiles.think]
+model_provider = "ephone"
+model = "o4-mini"
+approval_policy = "on-request"
+model_reasoning_effort = "high"
+```
+
+## 常见问题排查
+
+<AccordionGroup>
+  <Accordion title="401 Unauthorized — 仍然连接 api.openai.com">
+    **原因**：未设置 `model_provider = "ephone"`，Codex 将已知模型名（如 `gpt-4o`）路由到内置 OpenAI Provider。
+
+    **解决**：确认 `config.toml` 顶层有 `model_provider = "ephone"`。
+
+    如果之前通过 ChatGPT 登录过 Codex，还需要清除缓存凭证：
+
+    ```bash
+    # 删除旧的认证缓存
+    rm -f ~/.codex/auth.json
+    ```
+  </Accordion>
+
+  <Accordion title="WebSocket 连接到 api.openai.com">
+    **原因**：缺少 `model_provider` 配置，导致 Codex 将 WebSocket 连接发到 OpenAI 官方而非 ePhone AI。
+
+    **解决**：确认 `config.toml` 顶层有 `model_provider = "ephone"`，这会让 Codex 连接到 `wss://api.maxapi.ai/v1/responses`。
+  </Accordion>
+
+  <Accordion title="env_key 配置无效">
+    **原因**：`env_key` 应填写**环境变量的名称**（如 `"OPENAI_API_KEY"`），而不是 API Key 值本身。
+
+    **解决**：确认 `env_key = "OPENAI_API_KEY"`，并确认已通过 `export OPENAI_API_KEY="sk-..."` 设置环境变量。
+  </Accordion>
+
+  <Accordion title="切换 Profile 后回退到 OpenAI">
+    **原因**：Profile 中没有设置 `model_provider`，切换后使用默认的 OpenAI Provider。
+
+    **解决**：每个 Profile 都需要加上 `model_provider = "ephone"`。
+  </Accordion>
+</AccordionGroup>
+
+## 注意事项
+
+<Warning>
+  Codex CLI 的自主模式会频繁调用模型并执行系统命令，Token 消耗远高于普通对话。建议使用 Tier 2 账户以避免触发速率限制。
+</Warning>
+
+- 使用 `disable_response_storage = true` 关闭 API 响应存储，第三方 Provider 必须设置
+- 使用 `/compact` 命令可以压缩过长的对话历史，防止触发上下文窗口限制
+- 日志文件位于 `~/.codex/log/`，遇到问题时可以查看排查
+
+## 相关资源
+
+<CardGroup cols={3}>
+  <Card title="Codex CLI 官方文档" icon="book" href="https://developers.openai.com/codex">
+    OpenAI 官方文档
+  </Card>
+
+  <Card title="GitHub 仓库" icon="github" href="https://github.com/openai/codex">
+    开源代码与 Issue
+  </Card>
+
+  <Card title="AGENTS.md 规范" icon="file" href="https://agents.md">
+    项目配置文件规范
+  </Card>
+</CardGroup>
