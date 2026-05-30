@@ -46,7 +46,15 @@
         ]
       },
       {
-        "language": "en"
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "1",
+            "pages": [
+              "1"
+            ]
+          }
+        ]
       }
     ]
   },
