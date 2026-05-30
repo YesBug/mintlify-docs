@@ -107,5 +107,13 @@
       "website": "https://api.maxapi.ai"
     }
   },
-  "description": "MaxAPI.AI Docs"
+  "description": "MaxAPI.AI Docs",
+  "api": {
+    "mdx": {
+      "server": "https://api.maxapi.ai"
+    }
+  },
+  "icons": {
+    "library": "fontawesome"
+  }
 }
