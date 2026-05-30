@@ -37,7 +37,7 @@
         "language": "cn",
         "pages": [
           {
-            "group": "Getting Started",
+            "group": "快速开始",
             "pages": [
               "index",
               "quickstart"
